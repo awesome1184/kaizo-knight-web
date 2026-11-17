@@ -17,3 +17,14 @@ Initial project scaffold. The browser patcher and direct-to-fight launch path ar
 - Kaizo Knight v3.0 requires unmodified Deltarune Chapter 3 v0.0.105.
 - The existing web-port Chapter 3 archive chunks were verified byte-for-byte against the supplied data.win.
 - The optional NekoPresence.dll is Windows-only and is not used by the browser version.
+
+
+## Enable GitHub Pages
+
+The first deployment requires a one-time repository setting because GitHub Pages is not enabled automatically by the workflow:
+
+1. Open **Settings → Pages** in this repository.
+2. Under **Build and deployment**, set **Source** to **GitHub Actions**.
+3. The next push to `main` will run the WebAssembly build and publish the site.
+
+The deployment workflow builds xdelta3 from source; it does not publish the original game archive or the mod patch.
