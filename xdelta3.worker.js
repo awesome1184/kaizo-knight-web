@@ -37,9 +37,9 @@ self.onmessage = async (event) => {
   try {
     wasm = await createXdelta3Module();
     wasm.readSource = (pointer, offset, length) =>
-      readFileIntoMemory(state.sourceFile, pointer, Number(offset), length);
+      readFileIntoMemory(state.sourceFile, pointer, Number(offset), Number(length));
     wasm.readPatch = (pointer, offset, length) =>
-      readFileIntoMemory(state.patchFile, pointer, Number(offset), length);
+      readFileIntoMemory(state.patchFile, pointer, Number(offset), Number(length));
     wasm.outputFile = emitOutput;
     wasm.reportError = reportError;
 
