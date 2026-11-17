@@ -2004,6 +2004,11 @@ if (!deltaruneArchives[requestedChapter]) console.warn("Unknown Deltarune chapte
                 const key = "/_savedata/filech3_0";
                 const tx = db.transaction("FILE_DATA","readwrite");
                 const store = tx.objectStore("FILE_DATA");
+                const txDone = new Promise(function(resolve,reject) {
+                    tx.oncomplete = resolve;
+                    tx.onerror = function() { reject(tx.error); };
+                    tx.onabort = function() { reject(tx.error || new Error("Could not save the fight save")); };
+                });
                 const existing = await new Promise(function(resolve,reject) {
                     const req = store.get(key);
                     req.onsuccess = function() { resolve(req.result || null); };
@@ -2015,11 +2020,7 @@ if (!deltaruneArchives[requestedChapter]) console.warn("Unknown Deltarune chapte
                     store.put({timestamp:new Date(),mode:33206,contents:contents},key);
                     result = existing ? "Replaced the Chapter 3 save with the included fight save" : "Installed the included Chapter 3 fight save";
                 }
-                await new Promise(function(resolve,reject) {
-                    tx.oncomplete = resolve;
-                    tx.onerror = function() { reject(tx.error); };
-                    tx.onabort = function() { reject(tx.error || new Error("Could not save the fight save")); };
-                });
+                await txDone;
                 db.close();
                 return result;
             }
