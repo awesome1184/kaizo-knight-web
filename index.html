@@ -2078,12 +2078,12 @@ if (!deltaruneArchives[requestedChapter]) console.warn("Unknown Deltarune chapte
                     worker.postMessage({command:"start",sourceFile:sourceFile,patchFile:assets.patch,disableChecksum:false});
                 });
                 if (outputLength < 100000000) throw new Error("The patched Chapter 3 archive is unexpectedly small (" + outputLength + " bytes)");
+                const saveMessage = await kkInstallFightSave(assets.save);
                 const patchedBlob = new Blob(outputParts,{type:"application/octet-stream"});
                 const patchedUrl = URL.createObjectURL(patchedBlob);
                 gameArchiveChunks.splice(0,gameArchiveChunks.length,patchedUrl);
                 gameUnxUrl = patchedUrl;
                 if (assets.song) window.KAIZO_SONG_URL = URL.createObjectURL(assets.song);
-                const saveMessage = await kkInstallFightSave(assets.save);
                 kkStatus.textContent = "Patch verified. " + saveMessage + ". Starting the encounter...";
                 kaizoGate.style.display = "none";
                 resolveKaizoReady();
