@@ -33,10 +33,10 @@ jobs:
         run: git clone --depth 1 --branch v3.2.2 https://github.com/jmacd/xdelta.git native/xdelta
 
       - name: Build liblzma for WebAssembly
-        run: ./native/build-xz.sh
+        run: bash ./native/build-xz.sh
 
       - name: Build the xdelta3 WebAssembly decoder
-        run: ./native/build.sh
+        run: bash ./native/build.sh
 
       - name: Assemble Pages site
         run: |
