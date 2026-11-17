@@ -2000,25 +2000,27 @@ if (!deltaruneArchives[requestedChapter]) console.warn("Unknown Deltarune chapte
                     req.onerror = function() { reject(req.error || new Error("Could not open game save storage")); };
                 });
                 const key = "/_savedata/filech3_0";
-                const tx = db.transaction("FILE_DATA","readwrite");
-                const store = tx.objectStore("FILE_DATA");
-                const txDone = new Promise(function(resolve,reject) {
-                    tx.oncomplete = resolve;
-                    tx.onerror = function() { reject(tx.error); };
-                    tx.onabort = function() { reject(tx.error || new Error("Could not save the fight save")); };
-                });
+                const readTx = db.transaction("FILE_DATA","readonly");
                 const existing = await new Promise(function(resolve,reject) {
-                    const req = store.get(key);
+                    const req = readTx.objectStore("FILE_DATA").get(key);
                     req.onsuccess = function() { resolve(req.result || null); };
                     req.onerror = function() { reject(req.error); };
                 });
                 let result = "Kept your existing Chapter 3 save";
                 if (!existing || kkReplaceSave.checked) {
+                    // Read the ZIP entry before opening the write transaction:
+                    // IndexedDB transactions can auto-commit across unrelated awaits.
                     const contents = new Uint8Array(await saveBlob.arrayBuffer());
-                    store.put({timestamp:new Date(),mode:33206,contents:contents},key);
+                    const tx = db.transaction("FILE_DATA","readwrite");
+                    const txDone = new Promise(function(resolve,reject) {
+                        tx.oncomplete = resolve;
+                        tx.onerror = function() { reject(tx.error); };
+                        tx.onabort = function() { reject(tx.error || new Error("Could not save the fight save")); };
+                    });
+                    tx.objectStore("FILE_DATA").put({timestamp:new Date(),mode:33206,contents:contents},key);
+                    await txDone;
                     result = existing ? "Replaced the Chapter 3 save with the included fight save" : "Installed the included Chapter 3 fight save";
                 }
-                await txDone;
                 db.close();
                 return result;
             }
