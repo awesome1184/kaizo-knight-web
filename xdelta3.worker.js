@@ -18,7 +18,7 @@ function readFileIntoMemory(file, pointer, offset, length) {
 }
 
 function emitOutput(pointer, length) {
-  const copy = new Uint8Array(wasm.HEAP8.buffer, pointer, length).slice();
+  const copy = new Uint8Array(wasm.HEAP8.buffer, pointer, Number(length)).slice();
   postMessage({ type: "chunk", bytes: copy.buffer }, [copy.buffer]);
 }
 
