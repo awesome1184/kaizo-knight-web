@@ -1232,7 +1232,7 @@ progress[value]::-webkit-progress-value {
                 screen.className = 'thanks-screen';
                 screen.innerHTML = '<div class="thanks-title">' + DR_SOUL + '<div>THANK  YOU  FOR  PLAYING</div></div>' +
                     '<div class="thanks-sub">YOU CAN CLOSE THIS TAB NOW.</div>' +
-                    '<a href="/">&gt; RETURN TO KAIZO KNIGHT</a>';
+                    '<a href="./">&gt; RETURN TO KAIZO KNIGHT</a>';
                 document.body.appendChild(screen);
             }
 
@@ -1835,7 +1835,6 @@ const deltaruneChapterExternalFiles = {"3":["AUDIO_INTRONOISE.ogg","audiogroup1.
 
             console.log('[deltarune-web] v9.12 - Field of Hopes stacked-music fix: the web runner reports audio_is_playing()=false for streamed sounds (its ogg state thread cannot spawn), so every room re-entry stacked another copy of the theme on top of the playing one (two tracks at once) and the multiplied main-thread ogg polling crashed the renderer. The page now stops all scheduled audio nodes the moment the game fetches a new mus/*.ogg (which it does exactly when starting a new music stream) - desktop handoff semantics restored. See README v9.12.');
 
-const requestedChapter = "3";
 const activeDeltaruneChapter = "3";
 window.GM_GAME_ARCHIVE_CHUNKS = deltaruneArchives[activeDeltaruneChapter];
 window.GM_GAME_ARCHIVE = window.GM_GAME_ARCHIVE_CHUNKS[0];
