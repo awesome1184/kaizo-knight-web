@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#090711">
+<title>Kaizo Knight — Attack Practice</title>
+<style>
+:root{color-scheme:dark;--bg:#090711;--panel:#151322;--line:#39334d;--text:#eeeaf9;--muted:#a6a0bc;--pink:#ff78c9;--blue:#88ccff;--gold:#ffd97a;--red:#ff5f73}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(ellipse at 50% -10%,#292044 0,#100d1b 48%,#07060d 100%);color:var(--text);font:14px/1.45 ui-monospace,SFMono-Regular,Menlo,Consolas,monospace}
+body{padding:18px;display:flex;justify-content:center}.app{width:min(100%,1080px);display:grid;gap:14px;align-content:start}.top{display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}.eyebrow{color:var(--pink);letter-spacing:.22em;font-size:11px}.top h1{margin:4px 0 0;font-size:clamp(22px,4vw,34px);letter-spacing:.06em}.sub{color:var(--muted);font-size:12px;max-width:650px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 280px;gap:14px;align-items:start}.stage{background:#08070e;border:1px solid #45395b;box-shadow:0 0 45px #0009;border-radius:9px;overflow:hidden}.stage canvas{display:block;width:100%;height:auto;aspect-ratio:4/3;image-rendering:pixelated;background:#05040a}.hud{display:flex;justify-content:space-between;gap:12px;padding:9px 12px;background:#100e1a;border-top:1px solid #39334d;font-size:12px;flex-wrap:wrap}.muted{color:var(--muted)}.side{display:grid;gap:12px}.panel{background:linear-gradient(180deg,#181526,#100e1a);border:1px solid var(--line);border-radius:8px;padding:13px}.panel h2{font-size:12px;letter-spacing:.16em;color:var(--pink);margin:0 0 10px}.row{display:flex;gap:8px;align-items:center}.stack{display:grid;gap:9px}select,button{font:inherit;color:var(--text);border:1px solid #514967;border-radius:5px;background:#201c30;padding:9px 10px}select{width:100%}button{cursor:pointer;transition:background .12s,border-color .12s,transform .12s}button:hover{border-color:#b59bff;background:#302746}button:active{transform:translateY(1px)}button.primary{border-color:#a56bc3;background:#47234f;color:#fff}button.primary:hover{background:#60306a}button.ghost{background:transparent}.actions{display:grid;grid-template-columns:1fr 1fr;gap:7px}.actions button{font-size:12px}.meter{height:8px;background:#302b40;border-radius:10px;overflow:hidden}.meter>i{display:block;height:100%;width:100%;background:linear-gradient(90deg,#e74783,#ffb3d9);transition:width .15s}.hp-line{display:flex;justify-content:space-between;font-size:12px;margin-bottom:5px}.badge{font-size:10px;border:1px solid #574e6c;border-radius:4px;padding:3px 6px;color:var(--muted)}.keys{font-size:11px;color:var(--muted);line-height:1.9}.keys b{color:#f3eaff}.log{height:122px;overflow:auto;font-size:11px;line-height:1.7;color:#beb6d0}.log div{border-bottom:1px solid #ffffff0d;padding:2px 0}.touch{display:none;grid-template-columns:1fr 1fr;gap:12px}.pad{display:grid;grid-template-columns:repeat(3,42px);grid-template-rows:repeat(2,40px);gap:4px;justify-content:center}.pad button{padding:0}.pad button:nth-child(1){grid-column:2}.pad button:nth-child(2){grid-column:1;grid-row:2}.pad button:nth-child(3){grid-column:2;grid-row:2}.pad button:nth-child(4){grid-column:3;grid-row:2}.touch .fire{display:grid;gap:6px;grid-template-columns:1fr}.foot{color:#827b98;font-size:10px;text-align:center}.hidden{display:none!important}@media(max-width:800px){body{padding:10px}.layout{grid-template-columns:1fr}.side{grid-template-columns:1fr 1fr}.side .panel:first-child{grid-column:1/-1}.touch{display:grid}}@media(max-width:500px){.side{grid-template-columns:1fr}.side .panel:first-child{grid-column:auto}.hud{font-size:11px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="top"><div><div class="eyebrow">UNOFFICIAL FAN-MADE BATTLE LAB</div><h1>KAIZO KNIGHT</h1><div class="sub">A focused attack-practice build. Select an encounter pattern or run the four-phase sequence. This uses original vector effects and newly written gameplay code.</div></div><span class="badge">BUILD 0.1 · PATTERN LAB</span></header>
+  <div class="layout">
+    <main class="stage">
+      <canvas id="game" width="800" height="600" aria-label="Kaizo Knight battle practice game"></canvas>
+      <div class="hud"><span id="status">READY · SELECT A MODE</span><span><span class="muted">PHASE</span> <b id="phase">—</b> &nbsp; <span class="muted">ATTACK</span> <b id="attackName">—</b></span></div>
+    </main>
+    <aside class="side">
+      <section class="panel stack">
+        <h2>ENCOUNTER SETUP</h2>
+        <label class="muted" for="attack">Practice attack</label><select id="attack"></select>
+        <div class="actions"><button class="primary" id="practice">PRACTICE</button><button class="primary" id="full">FULL SEQUENCE</button></div>
+        <div class="row"><button class="ghost" id="restart" style="flex:1">RESTART · R</button><button class="ghost" id="pause" style="flex:1">PAUSE</button></div>
+        <div class="muted" style="font-size:11px" id="modeNote">Practice mode repeats the selected pattern. Full sequence advances through the phases.</div>
+      </section>
+      <section class="panel stack">
+        <h2>SOUL STATUS</h2>
+        <div><div class="hp-line"><span>HP</span><b id="hpText">90 / 90</b></div><div class="meter"><i id="hpBar"></i></div></div>
+        <div><div class="hp-line"><span>GRAZE</span><b id="grazeText">0</b></div><div class="meter"><i id="grazeBar" style="background:linear-gradient(90deg,#58b8ed,#b1efff);width:0"></i></div></div>
+        <div class="row" style="justify-content:space-between"><span class="muted">Turn timer</span><b id="timer">—</b></div>
+      </section>
+      <section class="panel stack">
+        <h2>BATTLE COMMAND</h2>
+        <div class="actions"><button data-command="FIGHT">FIGHT</button><button data-command="ACT">ACT</button><button data-command="ITEM">ITEM</button><button data-command="GUARD">GUARD</button></div>
+        <div class="muted" id="commandHint" style="font-size:11px">Survive the attack to open the command menu.</div>
+      </section>
+      <section class="panel stack">
+        <h2>CONTROLS</h2><div class="keys"><b>WASD / ARROWS</b> Move<br><b>SHIFT</b> Focus movement<br><b>SPACE / Z / ENTER</b> Confirm command<br><b>ESC / X</b> Cancel or return<br><b>R</b> Restart · <b>P</b> Pause</div>
+      </section>
+      <section class="panel stack"><h2>EVENT LOG</h2><div id="log" class="log"></div></section>
+    </aside>
+  </div>
+  <div class="touch"><div class="pad"><button data-dir="up">▲</button><button data-dir="left">◀</button><button data-dir="down">▼</button><button data-dir="right">▶</button></div><div class="fire"><button data-key="confirm" class="primary">Z · CONFIRM</button><button data-key="focus">FOCUS</button><button data-key="cancel">X · BACK</button></div></div>
+  <div class="foot">The attack names and phase roster are taken from the supplied Kaizo Knight v3.0 build. Pattern timings and visuals in this first independent implementation are approximations, not a frame-accurate decompilation.</div>
+</div>
+<script>
+(() => {
+'use strict';
+const $=id=>document.getElementById(id), canvas=$('game'),ctx=canvas.getContext('2d');
+const W=800,H=600, box={x:250,y:285,w:300,h:220};
+const phases=[
+ {name:'I',attacks:['Starstorm 1','Crescent Slash','Blade Rain 1','Tunnel 1','Multislash 1','Diamond Storm','Blade Rain 2','Swords 1','Frenzy 1']},
+ {name:'II',attacks:['Starstorm 2','Splitter DX','Multislash 2','Piercing Blades','Frenzy 2','Tunnel 2','Blade Rain 3','Multislash 3','Rising Abyss','Swords 2','Multislash 4','Starstorm 3','Multislash 5','Roaring']},
+ {name:'III',attacks:['Swords 3','Frenzy 2-B','Frenzy 2-C','Blade Rain 3 [Type-B]','Rising Abyss [Type-B]','Soul Splitter','Soul Splitter 2','Vortex 1','Vortex 2','Vortex 3']},
+ {name:'IV',attacks:['Starstorm 4','Starstorm 4 Final','Frenzy 3','X-Attacks','Roaring Delta','Quickslash','Cross Clash']}
+];
+const special=['Blade Rain 1 (Type-B)','Frenzy 2 [NEW]','Blade Rain 3 [NEW]','Rising Abyss [Now 1-5]','Swords 4','Multislash 3 Final','Soul Splitter 3','Starstorm Loop'];
+const patterns={
+ 'Starstorm 1':'stars','Starstorm 2':'stars','Starstorm 3':'stars','Starstorm 4':'stars','Starstorm 4 Final':'stars','Starstorm Loop':'stars',
+ 'Crescent Slash':'crescent','Blade Rain 1':'rain','Blade Rain 2':'rain','Blade Rain 3':'rain','Blade Rain 1 (Type-B)':'rain','Blade Rain 3 [Type-B]':'rain','Blade Rain 3 [NEW]':'rain',
+ 'Tunnel 1':'tunnel','Tunnel 2':'tunnel','Multislash 1':'multi','Multislash 2':'multi','Multislash 3':'multi','Multislash 4':'multi','Multislash 5':'multi','Multislash 3 Final':'multi',
+ 'Diamond Storm':'diamonds','Swords 1':'swords','Swords 2':'swords','Swords 3':'swords','Swords 4':'swords','Frenzy 1':'frenzy','Frenzy 2':'frenzy','Frenzy 2-B':'frenzy','Frenzy 2-C':'frenzy','Frenzy 2 [NEW]':'frenzy','Frenzy 3':'frenzy',
+ 'Splitter DX':'splitter','Splitter 1':'splitter','Splitter 2':'splitter','Splitter 3':'splitter','Piercing Blades':'pierce','Rising Abyss':'abyss','Rising Abyss [Type-B]':'abyss','Rising Abyss [Now 1-5]':'abyss','Roaring':'roaring','Roaring Delta':'roaring','Vortex 1':'vortex','Vortex 2':'vortex','Vortex 3':'vortex','Soul Splitter':'soul','Soul Splitter 2':'soul','Soul Splitter 3':'soul','Quickslash':'quick','X-Attacks':'xattack','Cross Clash':'xattack'
+};
+const all=[...new Set([...phases.flatMap(p=>p.attacks),...special])];
+const attackSel=$('attack');for(let pi=0;pi<phases.length;pi++){const og=document.createElement('optgroup');og.label=`PHASE ${pi+1}`;for(const name of phases[pi].attacks){const o=document.createElement('option');o.value=name;o.textContent=name;og.append(o)}attackSel.append(og)}
+const extras=document.createElement('optgroup');extras.label='VARIANTS / PRACTICE';for(const name of special){const o=document.createElement('option');o.value=name;o.textContent=name;extras.append(o)}attackSel.append(extras);
+const input={up:false,down:false,left:false,right:false,focus:false,confirm:false,cancel:false};let held=new Set(),pointerKeys=[];
+const soul={x:400,y:393,r:8,hp:90,max:90,inv:0};let bullets=[],warnings=[],particles=[],slashes=[],stars=[],mode='idle',runMode='practice',attack='',attackKind='',phaseIndex=0,turn=0,tick=0,duration=600,paused=false,graze=0,score=0,commandCooldown=0,cmdIndex=0,shake=0,screenFlash=0,patternCount=0;
+const commandButtons=[...document.querySelectorAll('[data-command]')];
+function log(msg){const el=$('log'),d=document.createElement('div');d.textContent='› '+msg;el.prepend(d);while(el.children.length>22)el.lastChild.remove()}
+function setStatus(s){$('status').textContent=s}
+function ui(){ $('hpText').textContent=`${Math.max(0,Math.ceil(soul.hp))} / ${soul.max}`;$('hpBar').style.width=`${Math.max(0,soul.hp/soul.max*100)}%`;$('grazeText').textContent=graze;$('grazeBar').style.width=`${Math.min(100,graze/2)}%`;$('timer').textContent=mode==='dodge'?Math.max(0,Math.ceil((duration-tick)/60))+'s':'—';$('phase').textContent=mode==='idle'?'—':String(phaseIndex+1);$('attackName').textContent=attack||'—';$('commandHint').textContent=mode==='command'?'Choose a command. FIGHT uses graze charge for bonus damage.':mode==='dodge'?'Dodge the pattern. Close passes build graze.':'Survive the attack to open the command menu.'}
+function resetPlayer(){soul.x=400;soul.y=393;soul.hp=90;soul.inv=0;graze=0;score=0;bullets=[];warnings=[];particles=[];slashes=[];shake=0;screenFlash=0;}
+function pickPhase(name){for(let i=0;i<phases.length;i++)if(phases[i].attacks.includes(name))return i;return 0}
+function startPractice(name){runMode='practice';mode='dodge';paused=false;attack=name;phaseIndex=pickPhase(name);turn=0;resetPlayer();startAttack();log('Practice started: '+name);setStatus('DODGE · PRACTICE');ui()}
+function startFull(){runMode='full';mode='dodge';paused=false;resetPlayer();phaseIndex=0;turn=0;attack=phases[0].attacks[0];startAttack();log('Full Kaizo sequence started. Phase I.');setStatus('DODGE · FULL SEQUENCE');ui()}
+function startAttack(){attack=attack||phases[phaseIndex].attacks[turn];attackKind=patterns[attack]||'stars';tick=0;duration=attackKind==='roaring'?900:attackKind==='frenzy'?720:600;bullets=[];warnings=[];slashes=[];patternCount=0;const harder=phaseIndex>0;const scale=1+phaseIndex*.22;const arena={...box};if(attackKind==='stars')duration=720+(phaseIndex*60);if(attackKind==='abyss'||attackKind==='splitter')duration=660;log(`Phase ${phaseIndex+1}: ${attack}`);ui()}
+function rand(a,b){return a+Math.random()*(b-a)}function clamp(v,a,b){return Math.max(a,Math.min(b,v))}function spawnBullet(x,y,vx,vy,opt={}){bullets.push({x,y,vx,vy,r:opt.r??7,type:opt.type??'orb',color:opt.color??'#b9a4ff',life:opt.life??300,spin:opt.spin??0,angle:Math.atan2(vy,vx),graze:false,active:opt.active!==false,damage:opt.damage??8,scale:opt.scale??1});}
+function spawnWarning(x1,y1,x2,y2,delay=28,color='#ff6bb7',width=5){warnings.push({x1,y1,x2,y2,t:0,delay,color,width,done:false})}
+function spawnSlash(x1,y1,x2,y2,delay=20,color='#ff6bb7',width=8){slashes.push({x1,y1,x2,y2,t:0,delay,life:24,color,width,active:false})}
+function aim(x,y,speed){const a=Math.atan2(soul.y-y,soul.x-x);return [Math.cos(a)*speed,Math.sin(a)*speed]}
+function fireAimed(x,y,speed,opt={}){const [vx,vy]=aim(x,y,speed);spawnBullet(x,y,vx,vy,opt)}
+function fan(x,y,count,base,speed,spread,opt={}){for(let i=0;i<count;i++){const a=base-spread/2+spread*(count===1?.5:i/(count-1));spawnBullet(x,y,Math.cos(a)*speed,Math.sin(a)*speed,opt)}}
+function patternStep(){const t=tick,sec=t/60,p=phaseIndex,hard=1+p*.18;
+ switch(attackKind){
+ case 'stars':
+  if(t%52===1){const x=rand(box.x+20,box.x+box.w-20),y=box.y-24;let a=Math.atan2(soul.y-y,soul.x-x);const n=attack.includes('Final')?9:7;fan(x,y,n,a,2.4*hard,.9,{type:'star',r:7,color:'#f4e8ff'});}
+  if(t%145===80){for(let j=0;j<2;j++){const x=j?box.x+box.w+10:box.x-10;fireAimed(x,rand(box.y+20,box.y+box.h-20),3.0*hard,{type:'star',r:6,color:'#9be7ff'});}}
+  break;
+ case 'crescent':
+  if(t%105===1){const x=t%210===1?box.x-18:box.x+box.w+18;spawnWarning(x,rand(box.y+20,box.y+box.h-20),x<box.x?box.x+box.w:box.x,rand(box.y+20,box.y+box.h-20),34,'#f7e9ff',10);}
+  if(t%160===0){for(let k=0;k<5;k++)spawnBullet(box.x+box.w+10,box.y+25+k*40,-4.8*hard,rand(-.8,.8),{type:'crescent',r:10,color:'#d7caff'});}break;
+ case 'rain':
+  if(t%20===1){const count=attack.includes('Type-B')||attack.includes('[NEW]')?4:3;for(let i=0;i<count;i++){const x=rand(box.x+10,box.x+box.w-10);spawnWarning(x-28,box.y-40,x+rand(-30,30),box.y+box.h+20,22,'#ff79ba',4);}}
+  if(t%20===14){const count=attack.includes('Type-B')?4:3;for(let i=0;i<count;i++){const x=rand(box.x+10,box.x+box.w-10);spawnBullet(x,box.y-30,rand(-1.2,1.2),4.3*hard,{type:'sword',r:8,color:'#f6d6ff'});}}break;
+ case 'tunnel':
+  if(t%102===1){const gapY=rand(box.y+55,box.y+box.h-55),gap=attack==='Tunnel 2'?72:94;for(let y=box.y+8;y<box.y+box.h-4;y+=27){if(Math.abs(y-gapY)>gap/2){spawnBullet(box.x-18,y,-3.2*hard,0,{type:'sword',r:9,color:'#b5d8ff'});spawnBullet(box.x+box.w+18,y,3.2*hard,0,{type:'sword',r:9,color:'#b5d8ff'});}}}break;
+ case 'multi':
+  if(t%72===1){const side=t%144===1?0:1;for(let j=0;j<3+(p>1?1:0);j++){const yy=box.y+26+j*(box.h-52)/(2+(p>1?1:0));if(side===0)spawnWarning(box.x-6,yy,box.x+box.w+8,yy+rand(-90,90),24,'#ff5ca8',9);else spawnWarning(box.x+box.w+6,yy,box.x-8,yy+rand(-90,90),24,'#ff5ca8',9);}}
+  if(t%72===26){const side=t%144<72?0:1;const y=rand(box.y+15,box.y+box.h-15);spawnBullet(side===0?box.x-15:box.x+box.w+15,y,side===0?5.2*hard:-5.2*hard,rand(-1.6,1.6),{type:'slash',r:10,color:'#ffb8dd'});}break;
+ case 'diamonds':
+  if(t%36===1){const a=sec*1.1;for(let j=0;j<8;j++){const ang=a+j*Math.PI/4;const x=box.x+box.w/2+Math.cos(ang)*215,y=box.y+box.h/2+Math.sin(ang)*170;const [vx,vy]=aim(x,y,2.2*hard);spawnBullet(x,y,vx,vy,{type:'diamond',r:9,color:'#9eeaff'});}}break;
+ case 'swords':
+  if(t%28===1){const x=clamp(soul.x+rand(-75,75),box.x+14,box.x+box.w-14);spawnWarning(x,box.y-30,x,box.y+box.h,25,'#b3c8ff',4);}
+  if(t%28===17){const x=clamp(soul.x+rand(-100,100),box.x+14,box.x+box.w-14);spawnBullet(x,box.y-36,rand(-.35,.35),5.1*hard,{type:'sword',r:8,color:'#dbe7ff'});}break;
+ case 'frenzy':
+  if(t%40===1){const edge=t%80<40?box.x-14:box.x+box.w+14;const y=rand(box.y+15,box.y+box.h-15);fireAimed(edge,y,4.1*hard,{type:'slash',r:10,color:'#ffc0df'});fan(edge,y,3,Math.atan2(soul.y-y,soul.x-edge),2.8*hard,1.1,{type:'star',r:6,color:'#b7ecff'});}
+  if(t%120===60){for(let i=0;i<4;i++)spawnWarning(box.x+20+i*85,box.y,box.x+rand(0,box.w),box.y+box.h,17,'#ff69b1',6);}break;
+ case 'splitter':
+  if(t%110===1){const vertical=t%220===1;const at=vertical?clamp(soul.x+rand(-35,35),box.x+70,box.x+box.w-70):clamp(soul.y+rand(-28,28),box.y+45,box.y+box.h-45);if(vertical)spawnWarning(at,box.y,at,box.y+box.h,45,'#ff4b81',9);else spawnWarning(box.x,at,box.x+box.w,at,45,'#ff4b81',9);}
+  if(t%110===48){const vertical=t%220===1;for(let j=0;j<8;j++){const q=j/7;if(vertical)spawnBullet(box.x-20+q*(box.w+40),box.y-8,0,4.1*hard,{type:'diamond',r:7,color:'#ffa4ce'});else spawnBullet(box.x-8,box.y-15+q*(box.h+30),4.2*hard,0,{type:'diamond',r:7,color:'#ffa4ce'});}}break;
+ case 'pierce':
+  if(t%56===1){const y=rand(box.y+24,box.y+box.h-24);spawnWarning(box.x+box.w+8,y,box.x-8,clamp(soul.y+rand(-40,40),box.y,box.y+box.h),30,'#a8e5ff',5);}
+  if(t%56===29){const x=box.x+box.w+12;fireAimed(x,rand(box.y+20,box.y+box.h-20),6.2*hard,{type:'sword',r:7,color:'#a8e5ff'});}break;
+ case 'abyss':
+  if(t%96===1){const gx=rand(box.x+42,box.x+box.w-42);for(let i=0;i<5;i++){const x=clamp(gx+(i-2)*28,box.x+10,box.x+box.w-10);spawnWarning(x,box.y+box.h+8,x,box.y+8,35,'#ff5b98',6);}}
+  if(t%96===38){const gx=rand(box.x+42,box.x+box.w-42);for(let i=0;i<5;i++){const x=clamp(gx+(i-2)*28,box.x+10,box.x+box.w-10);spawnBullet(x,box.y+box.h+12,rand(-.3,.3),-5.3*hard,{type:'sword',r:8,color:'#ff9abf'});}}break;
+ case 'roaring':
+  if(t%70===1){const cx=box.x+box.w/2,cy=box.y+box.h/2;for(let j=0;j<16;j++){const a=j*Math.PI/8+sec*.22;spawnBullet(cx+Math.cos(a)*225,cy+Math.sin(a)*170,-Math.cos(a)*3.1*hard,-Math.sin(a)*3.1*hard,{type:'star',r:7,color:'#ffdb98'});}}
+  if(t%210===100){for(let j=0;j<8;j++){const x=box.x+j*box.w/7;spawnWarning(x,box.y-10,box.x+box.w-x+box.x,box.y+box.h+10,26,'#ff5c5c',7);}}break;
+ case 'vortex':
+  if(t%12===1){const a=sec*2.2+Math.sin(sec)*.4,cx=box.x+box.w/2,cy=box.y+box.h/2;for(let j=0;j<2;j++){const an=a+j*Math.PI;const x=cx+Math.cos(an)*190,y=cy+Math.sin(an)*130;const [vx,vy]=aim(x,y,2.8*hard);spawnBullet(x,y,vx,vy,{type:'diamond',r:8,color:'#c0aaff'});}}break;
+ case 'soul':
+  if(t%95===1){const left=t%190===1;for(let j=0;j<7;j++){const y=box.y+15+j*30;spawnBullet(left?box.x-15:box.x+box.w+15,y,left?4.1*hard:-4.1*hard,rand(-.8,.8),{type:'star',r:7,color:'#ff8da9'});}}
+  if(t%95===48){for(let j=0;j<5;j++){const x=box.x+20+j*65;spawnBullet(x,box.y-14,0,4.4*hard,{type:'diamond',r:8,color:'#9cddff'});}}break;
+ case 'quick':
+  if(t%80===1){const y=rand(box.y+25,box.y+box.h-25);spawnWarning(box.x-12,y,box.x+box.w+12,y+rand(-70,70),22,'#f2eaff',12);}
+  if(t%80===24){const y=rand(box.y+25,box.y+box.h-25);fan(box.x-10,y,5,0,4.8*hard,Math.PI/2,{type:'slash',r:9,color:'#f8e8ff'});}break;
+ case 'xattack':
+  if(t%86===1){spawnWarning(box.x-15,box.y-15,box.x+box.w+15,box.y+box.h+15,30,'#ff73b8',8);spawnWarning(box.x+box.w+15,box.y-15,box.x-15,box.y+box.h+15,30,'#a7e8ff',8);}
+  if(t%86===32){for(let j=0;j<4;j++){const a=j*Math.PI/2+Math.PI/4;const x=box.x+box.w/2+Math.cos(a)*240,y=box.y+box.h/2+Math.sin(a)*190;const [vx,vy]=aim(x,y,4.6*hard);spawnBullet(x,y,vx,vy,{type:'slash',r:10,color:j%2?'#a7e8ff':'#ff8dc4'});}}break;
+ }
+}
+function updateEntities(){for(const w of warnings){w.t++;if(w.t>=w.delay&&!w.done){w.done=true;spawnSlash(w.x1,w.y1,w.x2,w.y2,0,w.color,w.width)}}warnings=warnings.filter(w=>w.t<w.delay+1);for(const s of slashes){s.t++;if(s.t>=s.delay)s.active=true;if(s.active&&s.t>s.delay+s.life)s.dead=true}slashes=slashes.filter(s=>!s.dead);
+ for(const b of bullets){b.x+=b.vx;b.y+=b.vy;b.life--;b.angle+=b.spin;if(!b.graze&&Math.hypot(b.x-soul.x,b.y-soul.y)<soul.r+b.r+17){b.graze=true;graze+=1;score+=1;particles.push({x:b.x,y:b.y,t:0,life:18,color:'#9be6ff'});}if(soul.inv<=0&&Math.hypot(b.x-soul.x,b.y-soul.y)<soul.r+b.r*.65){soul.hp=Math.max(0,soul.hp-b.damage);soul.inv=42;shake=7;screenFlash=6;particles.push({x:soul.x,y:soul.y,t:0,life:25,color:'#ff627d'});log('The SOUL was hit.');}}
+ bullets=bullets.filter(b=>b.life>0&&b.x>-100&&b.x<W+100&&b.y>-100&&b.y<H+100);
+ for(const s of slashes){if(s.active&&s.t===s.delay+1){const d=distanceToSegment(soul.x,soul.y,s.x1,s.y1,s.x2,s.y2);if(d<s.width/2+soul.r&&soul.inv<=0){soul.hp=Math.max(0,soul.hp-10);soul.inv=42;shake=8;screenFlash=7;log('A slash connected.')}}}
+ for(const p of particles)p.t++;particles=particles.filter(p=>p.t<p.life);if(soul.inv>0)soul.inv--;if(shake>0)shake*=.82;if(screenFlash>0)screenFlash--;
+}
+function distanceToSegment(px,py,x1,y1,x2,y2){const dx=x2-x1,dy=y2-y1,l=dx*dx+dy*dy;if(!l)return Math.hypot(px-x1,py-y1);const t=clamp(((px-x1)*dx+(py-y1)*dy)/l,0,1);return Math.hypot(px-(x1+t*dx),py-(y1+t*dy))}
+function moveSoul(){const slow=input.focus?.48:1;let dx=(input.right?1:0)-(input.left?1:0),dy=(input.down?1:0)-(input.up?1:0);if(dx&&dy){dx*=.707;dy*=.707}soul.x=clamp(soul.x+dx*4.1*slow,box.x+13,box.x+box.w-13);soul.y=clamp(soul.y+dy*4.1*slow,box.y+13,box.y+box.h-13)}
+function update(){if(paused)return;if(mode==='dodge'){tick++;moveSoul();patternStep();updateEntities();if(soul.hp<=0){mode='over';setStatus('DOWN · PRESS R TO RETRY');log('The run ended. Press R to retry.');ui();return;}if(tick>=duration){mode='command';bullets=[];warnings=[];slashes=[];setStatus('COMMAND · CHOOSE YOUR ACTION');log('Attack survived. Choose a command.');ui();}}else if(mode==='command'){if(soul.hp<=0){mode='over';setStatus('DOWN');}ui();}}
+function command(which){if(mode!=='command')return;if(which==='FIGHT'){const dmg=Math.round(25+Math.min(55,graze*.24));score+=dmg;log(`FIGHT! ${dmg} damage (${graze} graze).`);particles.push({x:400,y:190,t:0,life:45,color:'#ffd77d'});graze=0;}else if(which==='ACT'){log('ACT: You read the Knight’s movement. The SOUL steadies.');soul.hp=Math.min(soul.max,soul.hp+6);}else if(which==='ITEM'){log('ITEM: Used a restorative.');soul.hp=Math.min(soul.max,soul.hp+20);}else{log('GUARD: Incoming damage reduced next turn.');soul.hp=Math.min(soul.max,soul.hp+10);}if(runMode==='practice'){startAttack();mode='dodge';}else{turn++;if(turn>=phases[phaseIndex].attacks.length){phaseIndex++;turn=0;if(phaseIndex>=phases.length){mode='win';setStatus('CLEAR · KAIZO SEQUENCE COMPLETE');log('Sequence complete. Press R to play again.');ui();return;}log(`Phase ${phaseIndex+1} begins.`);}attack=phases[phaseIndex].attacks[turn];startAttack();mode='dodge';}ui()}
+function drawBackground(){ctx.fillStyle='#090711';ctx.fillRect(0,0,W,H);for(let i=0;i<70;i++){const x=(i*127+43)%W,y=(i*71+19)%H;ctx.fillStyle=`rgba(188,164,255,${.08+(i%4)*.035})`;ctx.fillRect(x,y,2,2)}const g=ctx.createRadialGradient(400,120,30,400,270,470);g.addColorStop(0,'#24193b');g.addColorStop(1,'#07060d');ctx.fillStyle=g;ctx.fillRect(0,0,W,H)}
+function drawBoss(){ctx.save();ctx.translate(400,135);ctx.shadowColor='#b88aff';ctx.shadowBlur=23;ctx.fillStyle='#171323';ctx.strokeStyle='#b6a2db';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(-48,30);ctx.lineTo(-40,-22);ctx.lineTo(-20,-47);ctx.lineTo(0,-66);ctx.lineTo(20,-47);ctx.lineTo(40,-22);ctx.lineTo(48,30);ctx.lineTo(23,46);ctx.lineTo(-23,46);ctx.closePath();ctx.fill();ctx.stroke();ctx.shadowBlur=0;ctx.strokeStyle='#f4eaff';ctx.lineWidth=4;ctx.beginPath();ctx.moveTo(-28,-28);ctx.lineTo(-62,-55);ctx.moveTo(28,-28);ctx.lineTo(62,-55);ctx.moveTo(-20,0);ctx.lineTo(20,0);ctx.stroke();ctx.fillStyle='#ff8ccc';ctx.fillRect(-20,6,40,4);ctx.restore()}
+function drawBox(){ctx.save();ctx.shadowColor='#a989ff';ctx.shadowBlur=15;ctx.strokeStyle='#cab7f6';ctx.lineWidth=3;ctx.strokeRect(box.x,box.y,box.w,box.h);ctx.shadowBlur=0;ctx.fillStyle='#11101b';ctx.fillRect(box.x+2,box.y+2,box.w-4,box.h-4);ctx.restore()}
+function drawBullets(){for(const b of bullets){ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.angle||0);ctx.shadowColor=b.color;ctx.shadowBlur=14;ctx.fillStyle=b.color;ctx.strokeStyle='#fff';ctx.lineWidth=1.3;if(b.type==='sword'||b.type==='slash'||b.type==='crescent'){ctx.beginPath();ctx.moveTo(-b.r*1.8,0);ctx.lineTo(0,-b.r*.55);ctx.lineTo(b.r*1.8,0);ctx.lineTo(0,b.r*.55);ctx.closePath();ctx.fill();ctx.stroke()}else if(b.type==='diamond'){ctx.beginPath();ctx.moveTo(0,-b.r*1.5);ctx.lineTo(b.r,0);ctx.lineTo(0,b.r*1.5);ctx.lineTo(-b.r,0);ctx.closePath();ctx.fill();ctx.stroke()}else{ctx.beginPath();ctx.arc(0,0,b.r,0,Math.PI*2);ctx.fill();ctx.stroke()}ctx.restore()}}
+function drawWarnings(){for(const w of warnings){const a=1-w.t/w.delay;ctx.save();ctx.globalAlpha=.18+.7*a;ctx.strokeStyle=w.color;ctx.lineWidth=w.width*(.6+.4*a);ctx.setLineDash([9,9]);ctx.beginPath();ctx.moveTo(w.x1,w.y1);ctx.lineTo(w.x2,w.y2);ctx.stroke();ctx.restore()}for(const s of slashes){if(!s.active){ctx.save();ctx.globalAlpha=.65;ctx.strokeStyle=s.color;ctx.lineWidth=2;ctx.setLineDash([5,7]);ctx.beginPath();ctx.moveTo(s.x1,s.y1);ctx.lineTo(s.x2,s.y2);ctx.stroke();ctx.restore()}else{ctx.save();ctx.shadowColor=s.color;ctx.shadowBlur=18;ctx.strokeStyle=s.color;ctx.lineWidth=s.width;ctx.beginPath();ctx.moveTo(s.x1,s.y1);ctx.lineTo(s.x2,s.y2);ctx.stroke();ctx.restore()}}}
+function drawSoul(){ctx.save();ctx.translate(soul.x,soul.y);if(soul.inv>0&&Math.floor(soul.inv/4)%2===0)ctx.globalAlpha=.35;ctx.shadowColor='#ff355e';ctx.shadowBlur=17;ctx.fillStyle='#ff315c';ctx.beginPath();ctx.moveTo(0,-11);ctx.bezierCurveTo(17,-22,20,4,0,14);ctx.bezierCurveTo(-20,4,-17,-22,0,-11);ctx.fill();ctx.restore()}
+function drawParticles(){for(const p of particles){ctx.save();ctx.globalAlpha=1-p.t/p.life;ctx.fillStyle=p.color;ctx.shadowColor=p.color;ctx.shadowBlur=15;ctx.beginPath();ctx.arc(p.x,p.y,p.t/3+2,0,Math.PI*2);ctx.fill();ctx.restore()}}
+function drawOverlay(){if(mode==='idle'||mode==='win'||mode==='over'){ctx.fillStyle='#05040aa9';ctx.fillRect(0,0,W,H);ctx.textAlign='center';ctx.fillStyle='#ffb6df';ctx.font='bold 30px monospace';ctx.fillText(mode==='idle'?'SELECT A MODE TO BEGIN':mode==='win'?'SEQUENCE CLEAR':'RUN OVER',W/2,250);ctx.fillStyle='#e4dff1';ctx.font='15px monospace';ctx.fillText(mode==='idle'?'Practice one attack or run all four phases':mode==='win'?'The Knight falls silent.': 'Press R to retry or select another attack.',W/2,285)}else if(mode==='command'){ctx.fillStyle='#08060dc8';ctx.fillRect(0,0,W,H);ctx.textAlign='center';ctx.fillStyle='#ffe0a5';ctx.font='bold 22px monospace';ctx.fillText('YOUR TURN',W/2,220);ctx.fillStyle='#f1eaff';ctx.font='14px monospace';ctx.fillText('Choose FIGHT / ACT / ITEM / GUARD',W/2,250)}if(paused){ctx.fillStyle='#07060dcc';ctx.fillRect(0,0,W,H);ctx.textAlign='center';ctx.fillStyle='#fff';ctx.font='bold 28px monospace';ctx.fillText('PAUSED',W/2,300)}}
+function render(){ctx.save();if(shake>0)ctx.translate(rand(-shake,shake),rand(-shake,shake));drawBackground();drawBoss();drawBox();drawWarnings();drawBullets();drawSoul();drawParticles();ctx.restore();if(screenFlash){ctx.fillStyle=`rgba(255,65,115,${screenFlash*.025})`;ctx.fillRect(0,0,W,H)}drawOverlay();ui()}
+function frame(){if(!paused)update();render();requestAnimationFrame(frame)}
+function restart(){if(runMode==='full')startFull();else startPractice(attackSel.value||attack||phases[0].attacks[0])}
+$('practice').addEventListener('click',()=>startPractice(attackSel.value));$('full').addEventListener('click',startFull);$('restart').addEventListener('click',restart);$('pause').addEventListener('click',()=>{paused=!paused;$('pause').textContent=paused?'RESUME':'PAUSE'});
+commandButtons.forEach(b=>b.addEventListener('click',()=>command(b.dataset.command)));
+function setKey(k,v){if(k in input)input[k]=v}const map={ArrowUp:'up',KeyW:'up',ArrowDown:'down',KeyS:'down',ArrowLeft:'left',KeyA:'left',ArrowRight:'right',KeyD:'right',ShiftLeft:'focus',ShiftRight:'focus',Space:'confirm',Enter:'confirm',KeyZ:'confirm',Escape:'cancel',KeyX:'cancel'};
+window.addEventListener('keydown',e=>{const k=map[e.code];if(k){e.preventDefault();setKey(k,true)}if(e.repeat)return;if(e.code==='KeyR')restart();if(e.code==='KeyP'){$('pause').click()}if(e.code==='Escape'&&mode==='command')command('GUARD');if((e.code==='Space'||e.code==='Enter'||e.code==='KeyZ')&&mode==='command')command('FIGHT')});window.addEventListener('keyup',e=>{const k=map[e.code];if(k)setKey(k,false)});window.addEventListener('blur',()=>{for(const k of Object.keys(input))input[k]=false});
+document.querySelectorAll('[data-dir]').forEach(b=>{const k=b.dataset.dir;b.addEventListener('pointerdown',e=>{e.preventDefault();setKey(k,true);b.setPointerCapture(e.pointerId)});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>setKey(k,false)))});document.querySelectorAll('[data-key]').forEach(b=>{const k=b.dataset.key;b.addEventListener('pointerdown',e=>{e.preventDefault();setKey(k,true);b.setPointerCapture(e.pointerId)});['pointerup','pointercancel','lostpointercapture'].forEach(ev=>b.addEventListener(ev,()=>setKey(k,false)))});
+attackSel.value=phases[0].attacks[0];resetPlayer();log('Ready. Choose Practice or Full Sequence.');ui();frame();
+})();
+</script>
+</body></html>
