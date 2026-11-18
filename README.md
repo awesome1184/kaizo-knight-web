@@ -1,24 +1,25 @@
-# Kaizo Knight Web
+# Kaizo Knight v3.0 — Browser Port
 
-A responsive GitHub Pages entry point for **DEVICE — Kaizo Roaring Knight**.
+A responsive GitHub Pages launcher for the **original Kaizo Roaring Knight v3.0 browser port**.
 
 ## Play
 
-The home page embeds the original hosted web port in a centered **16:9** viewport. The frame scales to fit the browser without stretching the game's proportions. Use **OPEN ORIGINAL** to launch the upstream page directly if embedding is unavailable. Landscape orientation is recommended on phones.
+Open the [GitHub Pages site](https://awesome1184.github.io/kaizo-knight-web/). It embeds the complete browser build in a centered 16:9 viewport. Use **OPEN FULL GAME** to launch the upstream game directly in a new tab if the embedded version has browser restrictions. Landscape orientation is recommended on phones.
 
-- Embedded game: https://amirouanother.github.io/DEVICE-Kaizo-Knight/game.html
-- Upstream source repository: https://github.com/amirouanother/DEVICE-Kaizo-Knight
+The game itself runs at:
+- [DEVICE — Kaizo Roaring Knight v3.0](https://amirouanother.github.io/DEVICE-Kaizo-Knight/game.html)
+- [Upstream source repository](https://github.com/amirouanother/DEVICE-Kaizo-Knight)
 
-## Preserved practice lab
+The upstream project identifies itself as a browser port of the Deltarune Chapter 3 Kaizo Knight v3.0 mod and says it contains the fight and cutscenes. It runs the original GameMaker game export, rather than a separately recreated attack simulator.
 
-The previous independently written attack-practice simulator remains available at [practice.html](./practice.html). It uses original vector effects and newly written JavaScript gameplay code rather than the upstream game's executable or data export.
+## Hosting boundary
 
-## Scope and attribution
+This repository hosts the responsive launcher only. The GameMaker HTML5 runner, game export, mod assets, music, and cutscenes remain on the upstream author's site. This repository does not patch a visitor's installed copy of Deltarune or redistribute the game's data files.
 
-This repository does not copy or rehost the upstream GameMaker export, Deltarune game data, music, video, or other game assets. The embedded game is loaded directly from the upstream author's public GitHub Pages site.
+## Credits
 
-The upstream game and its assets remain subject to their respective owners' rights and terms. The Apache-2.0 license in this repository applies only to original material authored for this repository; it does not grant rights to upstream game content or Deltarune assets.
+- DEVICE — Kaizo Roaring Knight v3.0 browser port: amirouanother
+- Kaizo Roaring Knight mod: EnderCat8
+- Deltarune and its assets remain the property of their respective rights holders.
 
-- DEVICE — Kaizo Roaring Knight web port: amirouanother
-- Deltarune remains the property of its respective rights holders.
-- This is an unofficial fan-made project and is not affiliated with Toby Fox.
+This is an unofficial fan-made project and is not affiliated with Toby Fox or the Deltarune team.
