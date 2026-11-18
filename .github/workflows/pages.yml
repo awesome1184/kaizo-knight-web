@@ -1,4 +1,4 @@
-name: Deploy Kaizo Knight Simulator
+name: Deploy Kaizo Knight Web
 
 on:
   push:
@@ -26,9 +26,10 @@ jobs:
       - name: Assemble static site
         run: |
           mkdir -p dist
-          cp index.html dist/index.html
+          cp index.html practice.html dist/
           touch dist/.nojekyll
           test -s dist/index.html
+          test -s dist/practice.html
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
       - name: Upload Pages artifact
