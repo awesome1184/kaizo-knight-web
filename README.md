@@ -1,17 +1,29 @@
-# Kaizo Knight Backstage Simulator
+# Kaizo Knight — Attack Practice Lab
 
-A small, standalone fan-made simulator featuring only two spaces: Tenna's backstage room and the Kaizo Knight battle arena. It does not include the Deltarune executable or extract/copy game data.
+A lightweight, independently written browser battle lab based on the attack roster found in the supplied Kaizo Knight v3.0 build. It uses original vector effects and original JavaScript gameplay code; it does not bundle Deltarune's executable, game data, sprites, sound effects, or the DEVICE_KNIGHT source tree.
 
 ## Play
 
-Open the GitHub Pages site. It starts in Tenna's backstage room; walk to the arena door or use **ENTER THE ARENA**.
+The GitHub Pages site opens directly into the attack lab. Choose **PRACTICE** to repeat one pattern or **FULL SEQUENCE** to play through the four listed phases.
 
+Controls:
 - Move: WASD or arrow keys
-- Confirm/interact: Z or Enter
-- Return to backstage: X or Escape
-- Retry after defeat: R
 - Focus movement: Shift
+- Confirm/FIGHT: Z, Space, or Enter
+- Cancel/guard: X or Escape
+- Restart: R
+- Pause: P
 
-During the battle, dodge projectiles inside the box. Passing close to a projectile earns graze points that increase the power of your next strike. When the dodge sequence ends, choose FIGHT, ACT, ITEM, or GUARD. Mobile directional and action buttons are included.
+Passing close to projectiles earns graze points. After each dodge section, use FIGHT, ACT, ITEM, or GUARD.
 
-This is an original, lightweight gameplay recreation of the requested two-room scenario, not the original Deltarune game or a byte-for-byte copy of the Kaizo Knight mod.
+## Scope and accuracy
+
+Attack names and the phase/variant roster were extracted from the supplied patched Kaizo Knight v3.0 game file. This first independent version implements the broad attack families (star patterns, blade rain, tunnels, multi-slashes, diamonds, swords, frenzy combinations, splitters, piercing blades, rising attacks, roaring, vortexes, soul splitters, quickslashes and cross attacks).
+
+It is **not** a byte-for-byte port of the mod and is not frame-accurate. Projectile timing, collision geometry, attack sequencing, and visuals are original approximations. The original mod's compiled bytecode was not decompiled into this project. The simulator currently contains a practice loop and a simplified four-phase sequence, not the full RPG battle system.
+
+## Credits and provenance
+
+- Kaizo Knight v3.0 mod and attack roster: EnderCat8 and contributors.
+- Deltarune remains the property of its respective rights holders.
+- This project is an unofficial fan-made practice implementation and is not affiliated with Toby Fox.
