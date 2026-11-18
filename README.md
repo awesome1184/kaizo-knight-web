@@ -1,29 +1,24 @@
-# Kaizo Knight — Attack Practice Lab
+# Kaizo Knight Web
 
-A lightweight, independently written browser battle lab based on the attack roster found in the supplied Kaizo Knight v3.0 build. It uses original vector effects and original JavaScript gameplay code; it does not bundle Deltarune's executable, game data, sprites, sound effects, or the DEVICE_KNIGHT source tree.
+A responsive GitHub Pages entry point for **DEVICE — Kaizo Roaring Knight**.
 
 ## Play
 
-The GitHub Pages site opens directly into the attack lab. Choose **PRACTICE** to repeat one pattern or **FULL SEQUENCE** to play through the four listed phases.
+The home page embeds the original hosted web port in a centered **16:9** viewport. The frame scales to fit the browser without stretching the game's proportions. Use **OPEN ORIGINAL** to launch the upstream page directly if embedding is unavailable. Landscape orientation is recommended on phones.
 
-Controls:
-- Move: WASD or arrow keys
-- Focus movement: Shift
-- Confirm/FIGHT: Z, Space, or Enter
-- Cancel/guard: X or Escape
-- Restart: R
-- Pause: P
+- Embedded game: https://amirouanother.github.io/DEVICE-Kaizo-Knight/game.html
+- Upstream source repository: https://github.com/amirouanother/DEVICE-Kaizo-Knight
 
-Passing close to projectiles earns graze points. After each dodge section, use FIGHT, ACT, ITEM, or GUARD.
+## Preserved practice lab
 
-## Scope and accuracy
+The previous independently written attack-practice simulator remains available at [practice.html](./practice.html). It uses original vector effects and newly written JavaScript gameplay code rather than the upstream game's executable or data export.
 
-Attack names and the phase/variant roster were extracted from the supplied patched Kaizo Knight v3.0 game file. This first independent version implements the broad attack families (star patterns, blade rain, tunnels, multi-slashes, diamonds, swords, frenzy combinations, splitters, piercing blades, rising attacks, roaring, vortexes, soul splitters, quickslashes and cross attacks).
+## Scope and attribution
 
-It is **not** a byte-for-byte port of the mod and is not frame-accurate. Projectile timing, collision geometry, attack sequencing, and visuals are original approximations. The original mod's compiled bytecode was not decompiled into this project. The simulator currently contains a practice loop and a simplified four-phase sequence, not the full RPG battle system.
+This repository does not copy or rehost the upstream GameMaker export, Deltarune game data, music, video, or other game assets. The embedded game is loaded directly from the upstream author's public GitHub Pages site.
 
-## Credits and provenance
+The upstream game and its assets remain subject to their respective owners' rights and terms. The Apache-2.0 license in this repository applies only to original material authored for this repository; it does not grant rights to upstream game content or Deltarune assets.
 
-- Kaizo Knight v3.0 mod and attack roster: EnderCat8 and contributors.
+- DEVICE — Kaizo Roaring Knight web port: amirouanother
 - Deltarune remains the property of its respective rights holders.
-- This project is an unofficial fan-made practice implementation and is not affiliated with Toby Fox.
+- This is an unofficial fan-made project and is not affiliated with Toby Fox.
