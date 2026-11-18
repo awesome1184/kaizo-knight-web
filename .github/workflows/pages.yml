@@ -1,4 +1,4 @@
-name: Deploy Kaizo Knight Web
+name: Deploy Kaizo Knight Simulator
 
 on:
   push:
@@ -23,39 +23,18 @@ jobs:
     steps:
       - name: Checkout site
         uses: actions/checkout@v4
-
-      - name: Set up Emscripten
-        uses: mymindstorm/setup-emsdk@v14
-        with:
-          version: 5.0.3
-
-      - name: Fetch pinned xdelta3 source
-        run: git clone --depth 1 --branch v3.2.2 https://github.com/jmacd/xdelta.git native/xdelta
-
-      - name: Build liblzma for WebAssembly
-        run: bash ./native/build-xz.sh
-
-      - name: Build the xdelta3 WebAssembly decoder
-        run: bash ./native/build.sh
-
-      - name: Assemble Pages site
+      - name: Assemble static site
         run: |
+          mkdir -p dist
           cp index.html dist/index.html
-          cp xdelta3.worker.js dist/xdelta3.worker.js
-          cp sw.js dist/sw.js
           touch dist/.nojekyll
           test -s dist/index.html
-          test -s dist/xdelta3.js
-          test -s dist/xdelta3.wasm
-
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
-
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
